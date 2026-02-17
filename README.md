@@ -36,4 +36,20 @@ uv run src/main.py
 ```
 
 ### 5. Connect your Model
-Connect your LLM (e.g., Claude Desktop, Gemini) to the MCP server using the configuration provided in `my-mcp-server/mcp-server-config.json` or by pointing it to the running server.
+To use this server with Claude Desktop, add the following to your `claude_desktop_config.json`:
+
+```json
+{
+  "mcpServers": {
+    "my-mcp-server": {
+      "command": "uv",
+      "args": [
+        "--directory",
+        "./my-mcp-server",
+        "run",
+        "src/main.py"
+      ]
+    }
+  }
+}
+```
