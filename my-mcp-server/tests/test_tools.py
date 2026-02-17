@@ -53,7 +53,7 @@ class TestToolLoading:
 
         tools = server.get_tools_sync()
         for tool_name, tool in tools.items():
-            assert hasattr(tool, 'fn'), f"Tool {tool_name} has no fn attribute"
+            assert hasattr(tool, "fn"), f"Tool {tool_name} has no fn attribute"
             assert callable(tool.fn), f"Tool {tool_name} is not callable"
 
 
@@ -66,12 +66,13 @@ class TestEvidenceTools:
         server.load_tools()
 
         assert "evidence" in server.loaded_tools
-        
+
         tools = server.get_tools_sync()
         assert "evidence_search" in tools
         assert "evidence_chain_history" in tools
         assert "evidence_custody_transfer" in tools
         assert "evidence_integrity_check" in tools
+
 
 class TestSystemTools:
     """Test the system management tools."""
@@ -82,12 +83,13 @@ class TestSystemTools:
         server.load_tools()
 
         assert "system" in server.loaded_tools
-        
+
         tools = server.get_tools_sync()
         assert "system_list_facilities" in tools
         assert "system_list_locations" in tools
         assert "system_alerts_monitor" in tools
         assert "system_personnel_list" in tools
+
 
 class TestReportingTools:
     """Test the business intelligence and reporting tools."""
@@ -98,7 +100,7 @@ class TestReportingTools:
         server.load_tools()
 
         assert "reports" in server.loaded_tools
-        
+
         tools = server.get_tools_sync()
         assert "get_case_health_summary" in tools
         assert "find_compromised_evidence" in tools

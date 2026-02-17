@@ -7,13 +7,13 @@ Each tool file should contain a function decorated with @mcp.tool().
 Usage Examples:
   # Stdio mode (default MCP transport)
   python src/main.py
-  
+
   # HTTP mode with MCP protocol over HTTP
   python src/main.py --transport http
-  
+
   # Custom host/port
   python src/main.py --transport http --host localhost --port 8080
-  
+
   # Environment variable mode
   MCP_TRANSPORT_MODE=http python src/main.py
 """
@@ -38,18 +38,18 @@ def main() -> None:
         "--transport",
         choices=["stdio", "http"],
         default="stdio",
-        help="Transport mode: stdio, or http"
+        help="Transport mode: stdio, or http",
     )
     parser.add_argument(
         "--host",
         default=os.getenv("HOST", "localhost"),
-        help="Host to bind to in HTTP mode (default: localhost)"
+        help="Host to bind to in HTTP mode (default: localhost)",
     )
     parser.add_argument(
         "--port",
         type=int,
         default=int(os.getenv("PORT", "3000")),
-        help="Port to bind to in HTTP mode (default: 3000)"
+        help="Port to bind to in HTTP mode (default: 3000)",
     )
 
     args = parser.parse_args()
@@ -61,24 +61,21 @@ def main() -> None:
     logging.basicConfig(
         level=logging.INFO,
         format="%(asctime)s - %(levelname)s - %(message)s",
-        handlers=[
-            logging.StreamHandler(sys.stderr)
-        ]
+        handlers=[logging.StreamHandler(sys.stderr)],
     )
 
     try:
         # Create server with dynamic tool loading
-        server = DynamicMCPServer(
-            name="my-mcp-server",
-            tools_dir="src/tools"
-        )
+        server = DynamicMCPServer(name="my-mcp-server", tools_dir="src/tools")
 
         # Load tools and start server
         server.load_tools()
 
         if transport_mode not in ["http", "stdio"]:
-            raise ValueError(f"Invalid transport mode: {transport_mode}. Must be one of: http, or stdio")
-        
+            raise ValueError(
+                f"Invalid transport mode: {transport_mode}. Must be one of: http, or stdio"
+            )
+
         server.run(transport_mode=transport_mode, host=args.host, port=args.port)
 
     except KeyboardInterrupt:

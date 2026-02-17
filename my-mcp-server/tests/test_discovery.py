@@ -23,13 +23,13 @@ class TestToolDiscovery:
 
             # Create a test tool file
             tool_file = tools_dir / "test_tool.py"
-            tool_content = '''
+            tool_content = """
 from core.server import mcp
 
 @mcp.tool()
 def test_tool(message: str) -> str:
     return f"Test: {message}"
-'''
+"""
             tool_file.write_text(tool_content)
 
             # Test discovery
@@ -52,7 +52,7 @@ def test_tool(message: str) -> str:
             # Create an invalid tool file (syntax error)
             tool_file = tools_dir / "invalid_tool.py"
             # This has a syntax error
-            tool_content = 'syntax error'
+            tool_content = "syntax error"
             tool_file.write_text(tool_content)
 
             server = DynamicMCPServer(name="Test", tools_dir=str(tools_dir))
@@ -69,10 +69,10 @@ def test_tool(message: str) -> str:
 
             # Create a tool file without matching function name
             tool_file = tools_dir / "mismatch.py"
-            tool_content = '''
+            tool_content = """
 def wrong_name(message: str) -> str:
     return f"Wrong: {message}"
-'''
+"""
             tool_file.write_text(tool_content)
 
             server = DynamicMCPServer(name="Test", tools_dir=str(tools_dir))

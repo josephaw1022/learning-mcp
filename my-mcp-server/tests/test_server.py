@@ -50,7 +50,7 @@ class TestDynamicMCPServer:
             mock_load.return_value = {
                 "tools": {
                     "echo": {"prefix": "[TEST] "},
-                    "weather": {"api_key_env": "WEATHER_API_KEY"}
+                    "weather": {"api_key_env": "WEATHER_API_KEY"},
                 }
             }
 
@@ -68,7 +68,7 @@ class TestDynamicMCPServer:
         """Test that run method defaults to stdio mode."""
         server = DynamicMCPServer(name="Test Server", tools_dir="src/tools")
 
-        with patch.object(server.mcp, 'run') as mock_run:
+        with patch.object(server.mcp, "run") as mock_run:
             server.run()
             mock_run.assert_called_once()
 
@@ -76,16 +76,20 @@ class TestDynamicMCPServer:
         """Test that run method can switch to HTTP mode."""
         server = DynamicMCPServer(name="Test Server", tools_dir="src/tools")
 
-        with patch.object(server.mcp, 'run') as mock_run:
+        with patch.object(server.mcp, "run") as mock_run:
             server.run(transport_mode="http", host="0.0.0.0", port=8080)
-            mock_run.assert_called_once_with(transport="http", host="0.0.0.0", port=8080, path="/mcp")
+            mock_run.assert_called_once_with(
+                transport="http", host="0.0.0.0", port=8080, path="/mcp"
+            )
 
     def test_http_transport_configuration(self) -> None:
         """Test HTTP transport configuration is passed to FastMCP."""
         server = DynamicMCPServer(name="Test Server", tools_dir="src/tools")
-        with patch.object(server.mcp, 'run') as mock_run:
+        with patch.object(server.mcp, "run") as mock_run:
             server.run(transport_mode="http", host="localhost", port=3000)
-            mock_run.assert_called_once_with(transport="http", host="localhost", port=3000, path="/mcp")
+            mock_run.assert_called_once_with(
+                transport="http", host="localhost", port=3000, path="/mcp"
+            )
             kwargs = mock_run.call_args.kwargs
             assert kwargs["transport"] == "http"
             assert kwargs["host"] == "localhost"
@@ -96,7 +100,7 @@ class TestDynamicMCPServer:
         """Test that HTTP server raises ImportError from FastMCP run."""
         server = DynamicMCPServer(name="Test Server", tools_dir="src/tools")
 
-        with patch.object(server.mcp, 'run') as mock_run:
+        with patch.object(server.mcp, "run") as mock_run:
             mock_run.side_effect = ImportError("No module named 'uvicorn'")
             with pytest.raises(ImportError, match="No module named 'uvicorn'"):
                 server.run(transport_mode="http", host="localhost", port=3000)

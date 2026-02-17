@@ -145,7 +145,9 @@ class DynamicMCPServer:
         # async
         return self.mcp._tool_manager._tools
 
-    def run(self, transport_mode: str = "stdio", host: str = "localhost", port: int = 3000) -> None:
+    def run(
+        self, transport_mode: str = "stdio", host: str = "localhost", port: int = 3000
+    ) -> None:
         """Run the FastMCP server.
 
         Args:
