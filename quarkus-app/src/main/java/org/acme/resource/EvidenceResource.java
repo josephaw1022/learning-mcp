@@ -18,14 +18,14 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Path;
+import jakarta.ws.rs.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.MessageDigest;
 import java.util.List;
 import java.util.UUID;
 import java.time.LocalDateTime;
 
-@jakarta.ws.rs.Path("/evidence")
+@Path("/evidence")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class EvidenceResource {
@@ -49,7 +49,7 @@ public class EvidenceResource {
     }
 
     @POST
-    @jakarta.ws.rs.Path("/ingest")
+    @Path("/ingest")
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @Transactional
     public Response ingest(@MultipartForm FileUpload upload) throws Exception {
@@ -62,7 +62,7 @@ public class EvidenceResource {
         item.sha256Hash = hash;
         item.status = EvidenceStatus.INGESTED;
         
-        Path target = Path.of(STORAGE_DIR, item.uuid.toString());
+        java.nio.file.Path target = java.nio.file.Path.of(STORAGE_DIR, item.uuid.toString());
         Files.copy(upload.file.toPath(), target, StandardCopyOption.REPLACE_EXISTING);
         item.storageProviderRef = target.toString();
         
@@ -74,7 +74,7 @@ public class EvidenceResource {
     }
 
     @GET
-    @jakarta.ws.rs.Path("/{id}/download")
+    @Path("/{id}/download")
     @Transactional
     public Response download(@PathParam("id") UUID id, @QueryParam("actorId") String actorId) throws Exception {
         EvidenceItem item = EvidenceItem.findById(id);
@@ -94,7 +94,7 @@ public class EvidenceResource {
     }
 
     @PATCH
-    @jakarta.ws.rs.Path("/{id}/transfer")
+    @Path("/{id}/transfer")
     @Transactional
     public Response transfer(@PathParam("id") UUID id, TransferRequest request) {
         EvidenceItem item = EvidenceItem.findById(id);
@@ -112,13 +112,13 @@ public class EvidenceResource {
     }
 
     @GET
-    @jakarta.ws.rs.Path("/{id}/history")
+    @Path("/{id}/history")
     public List<AuditEntry> history(@PathParam("id") UUID id) {
         return AuditEntry.list("evidenceId", id);
     }
 
     @GET
-    @jakarta.ws.rs.Path("/search")
+    @Path("/search")
     public List<EvidenceItem> search(@QueryParam("caseId") String caseId, @QueryParam("status") EvidenceStatus status) {
         if (caseId != null && status != null) {
             return EvidenceItem.list("caseId = ?1 and status = ?2", caseId, status);
@@ -131,7 +131,7 @@ public class EvidenceResource {
     }
 
     @POST
-    @jakarta.ws.rs.Path("/{id}/verify")
+    @Path("/{id}/verify")
     @Transactional
     public Response verify(@PathParam("id") UUID id, @QueryParam("actorId") String actorId) throws Exception {
         EvidenceItem item = EvidenceItem.findById(id);
