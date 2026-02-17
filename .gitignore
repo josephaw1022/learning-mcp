@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+.venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.pyc
+
+# Java/Quarkus
+target/
+.mvn/wrapper/maven-wrapper.jar
+
+# Node.js
+node_modules/
+
+# OS
+.DS_Store

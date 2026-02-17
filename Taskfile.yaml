@@ -1,0 +1,47 @@
+version: '3'
+
+vars:
+  POSTGRES_VERSION: 18
+  CONTAINER_NAME: mcp-postgres
+  DB_USER: postgres
+  DB_PASSWORD: postgres
+  DB_NAME: quarkus_db
+  VOLUME_NAME: mcp-postgres-data
+
+tasks:
+  pull:
+    desc: Pull the latest PostgreSQL image
+    cmds:
+      - docker pull postgres:{{.POSTGRES_VERSION}}
+
+  start:
+    desc: Start the PostgreSQL container
+    cmds:
+      - docker run -d --name {{.CONTAINER_NAME}} --restart unless-stopped -e POSTGRES_USER={{.DB_USER}} -e POSTGRES_PASSWORD={{.DB_PASSWORD}} -e POSTGRES_DB={{.DB_NAME}} -v {{.VOLUME_NAME}}:/var/lib/postgresql -p 5432:5432 postgres:{{.POSTGRES_VERSION}}
+    status:
+      - docker ps -a --format '{{.Names}}' | grep -q '^{{.CONTAINER_NAME}}$'
+
+  stop:
+    desc: Stop the PostgreSQL container
+    cmds:
+      - docker stop {{.CONTAINER_NAME}}
+    ignore_error: true
+
+  delete-container:
+    desc: Stop and remove the PostgreSQL container
+    cmds:
+      - task: stop
+      - docker rm {{.CONTAINER_NAME}}
+    ignore_error: true
+
+  delete-volume:
+    desc: Remove the PostgreSQL volume
+    cmds:
+      - docker volume rm {{.VOLUME_NAME}}
+    ignore_error: true
+
+  clean:
+    desc: Full cleanup of container and volume
+    cmds:
+      - task: delete-container
+      - task: delete-volume

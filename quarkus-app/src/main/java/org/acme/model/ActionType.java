@@ -1,0 +1,5 @@
+package org.acme.model;
+
+public enum ActionType {
+    UPLOAD, READ_METADATA, DOWNLOAD_BLOB, TRANSFER_CUSTODY, INTEGRITY_CHECK_FAIL, INTEGRITY_CHECK_PASS
+}
